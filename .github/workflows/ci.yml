@@ -75,9 +75,12 @@ jobs:
 #          aws-region: ${{ secrets.AWS_REGION }}
 
 
+      - name: Create SSH key file
+        run: echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/aivashka.pem && chmod 600 ~/.ssh/aivashka.pem
+
       - name: Deploy to EC2 instance
         run: |
           ssh -o StrictHostKeyChecking=no \
-            -i ${{ secrets.DEPLOY_KEY }} \
+            -i ~/.ssh/aivashka.pem \
             ubuntu@ec2-35-79-131-185.ap-northeast-1.compute.amazonaws.com \
-            'docker pull ${{ secrets.DOCKER_USERNAME}}/horario:latest && docker stop horario && docker rm horario && docker run -d --name horario ${{ secrets.DOCKER_USERNAME}}/horario:latest'
+            'docker pull ${{ secrets.DOCKER_USERNAME }}/horario:latest && docker stop horario && docker rm horario && docker run -d --name horario ${{ secrets.DOCKER_USERNAME }}/horario:latest'
