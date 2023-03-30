@@ -1,4 +1,4 @@
-DBHost: localhost
+DBHost: host.docker.internal
 DBPort: "5432"
 DBUser: postgres
 DBPassword: postgres

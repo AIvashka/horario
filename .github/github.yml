@@ -1,0 +1,74 @@
+name: Go CI/CD
+
+on:
+  push:
+    branches:
+      - master
+#      - deploy
+
+jobs:
+  lint-test:
+    name: Lint and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.19
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Lint
+        run: golangci-lint run
+
+      - name: Test
+        run: go test -v ./...
+
+  build-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: DOCKER_USERNAME/horario:latest
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+
+  deploy:
+    name: Deploy
+    needs: build-push
+    runs-on: ubuntu-latest
+    if: .github.ref == 'refs/heads/deploy'
+
+    steps:
+      - name: Install AWS CLI
+        uses: aws-actions/aws-cli@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Deploy to EC2 instance
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+            -i ${{ secrets.DEPLOY_KEY }} \
+            ubuntu@35.79.131.185 \
+            'docker pull DOCKER_USERNAME/horario:latest && docker stop horario && docker rm horario && docker run -d --name horario DOCKER_USERNAME/horario:latest'
