@@ -1,11 +1,10 @@
 package main
 
 import (
-	"log"
-
 	"horario/internal/config"
 	"horario/internal/events"
 	"horario/pkg/bot"
+	"log"
 )
 
 func main() {

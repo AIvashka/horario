@@ -1,7 +1,9 @@
 package config
 
 import (
+	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
+	"os"
 )
 
 // Config is the configuration struct
@@ -16,13 +18,12 @@ type Config struct {
 
 // LoadConfig loads the configuration from environment variables and/or config file
 func LoadConfig() (*Config, error) {
-	// Set the default values
-	viper.SetDefault("DBHost", "localhost")
-	viper.SetDefault("DBPort", "5432")
-	viper.SetDefault("DBUser", "postgres")
-	viper.SetDefault("DBPassword", "")
-	viper.SetDefault("DBName", "horario")
-	viper.SetDefault("BotToken", "")
+
+	// Look for .env file
+	err := godotenv.Load()
+	if err != nil && !os.IsNotExist(err) {
+		return nil, err
+	}
 
 	// Set the config file name and path
 	viper.SetConfigName("config")
@@ -60,3 +61,4 @@ func LoadConfig() (*Config, error) {
 
 	return cfg, nil
 }
+
