@@ -63,6 +63,7 @@ jobs:
   deploy:
     name: Deploy to EC2
     runs-on: ubuntu-latest
+    needs: build-push
 
     steps:
       - name: Deploy to EC2
@@ -76,6 +77,5 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/horario:latest
             docker stop horario_container || true
             docker rm horario_container || true
-#            docker run -d --name horario_container ${{ secrets.DOCKER_USERNAME }}/horario:latest
             docker run -d -v "$(pwd)/.env:/app/.env" --name horario_container ${{ secrets.DOCKER_USERNAME }}/horario:latest
 
