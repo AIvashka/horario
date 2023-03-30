@@ -58,9 +58,6 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME}}/horario:latest
-#        env:
-#          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-#          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
 
   deploy:
@@ -68,7 +65,7 @@ jobs:
     needs: build-push
     runs-on: ubuntu-latest
 #    if: .github.ref == 'refs/heads/deploy'
-    if: github.ref == 'refs/heads/deploy'
+#    if: github.ref == 'refs/heads/deploy'
 
     steps:
       - name: Install AWS CLI
