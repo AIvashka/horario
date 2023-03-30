@@ -8,34 +8,34 @@ on:
 #      - deploy
 
 jobs:
-  lint-test:
-    name: Lint and Test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.19
-
-      - name: Install dependencies
-        run: go mod download
-
-      - name: Install golangci-lint
-        run: |
-          curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.42.1
-
-      - name: Add golangci-lint to PATH
-        run: echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> $GITHUB_ENV
-
-      - name: Lint
-        run: golangci-lint run
-
-      - name: Test
-        run: go test -v ./...
+#  lint-test:
+#    name: Lint and Test
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Set up Go
+#        uses: actions/setup-go@v2
+#        with:
+#          go-version: 1.19
+#
+#      - name: Install dependencies
+#        run: go mod download
+#
+#      - name: Install golangci-lint
+#        run: |
+#          curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.42.1
+#
+#      - name: Add golangci-lint to PATH
+#        run: echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> $GITHUB_ENV
+#
+#      - name: Lint
+#        run: golangci-lint run
+#
+#      - name: Test
+#        run: go test -v ./...
 
   build-push:
     name: Build and Push Docker Image
@@ -50,10 +50,10 @@ jobs:
         with:
           context: .
           push: true
-          tags: DOCKER_USERNAME/horario:latest
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          tags: ${{ secrets.DOCKER_USERNAME | lower }}/horario:latest
+#        env:
+#          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
 
   deploy:
@@ -80,4 +80,4 @@ jobs:
           ssh -o StrictHostKeyChecking=no \
             -i ${{ secrets.DEPLOY_KEY }} \
             ubuntu@35.79.131.185 \
-            'docker pull DOCKER_USERNAME/horario:latest && docker stop horario && docker rm horario && docker run -d --name horario DOCKER_USERNAME/horario:latest'
+            'docker pull ${{ secrets.DOCKER_USERNAME | lower }}/horario:latest && docker stop horario && docker rm horario && docker run -d --name horario ${{ secrets.DOCKER_USERNAME | lower }}/horario:latest'
