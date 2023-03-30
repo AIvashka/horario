@@ -1,6 +1,0 @@
-DBHost: host.docker.internal
-DBPort: "5432"
-DBUser: postgres
-DBPassword: postgres
-DBName: horario
-BotToken: 5411301900:AAEibwlMLDsYzOfYK_N5KgkGAxKWQjl6xEk
