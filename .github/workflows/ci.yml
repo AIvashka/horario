@@ -3,7 +3,8 @@ name: Go CI/CD
 on:
   push:
     branches:
-      - master
+      [ master ]
+
 #      - deploy
 
 jobs:
