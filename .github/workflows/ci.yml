@@ -79,5 +79,5 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no \
             -i ${{ secrets.DEPLOY_KEY }} \
-            ubuntu@35.79.131.185 \
+            ubuntu@ec2-35-79-131-185.ap-northeast-1.compute.amazonaws.com \
             'docker pull ${{ secrets.DOCKER_USERNAME}}/horario:latest && docker stop horario && docker rm horario && docker run -d --name horario ${{ secrets.DOCKER_USERNAME}}/horario:latest'
