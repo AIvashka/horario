@@ -73,6 +73,7 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           port: 22
           script: |
+            ls
             docker pull ${{ secrets.DOCKER_USERNAME }}/horario:latest
             docker stop horario_container || true
             docker rm horario_container || true
