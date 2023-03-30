@@ -61,18 +61,22 @@ jobs:
 
 
   deploy:
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ec2-3-112-113-115.ap-northeast-1.compute.amazonaws.com
-        username: ubuntu
-        key: ${{ secrets.DEPLOY_KEY }}
-        port: 22
-        script: |
-          docker pull ${{ secrets.DOCKER_USERNAME }}/horario:latest
-          docker stop horario_container || true
-          docker rm horario_container || true
-          docker run -d --name horario_container ${{ secrets.DOCKER_USERNAME }}/horario:latest
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ec2-3-112-113-115.ap-northeast-1.compute.amazonaws.com
+          username: ubuntu
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: 22
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/horario:latest
+            docker stop horario_container || true
+            docker rm horario_container || true
+            docker run -d --name horario_container ${{ secrets.DOCKER_USERNAME }}/horario:latest
 
 #    name: Deploy to EC2
 #    runs-on: ubuntu-latest
