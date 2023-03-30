@@ -50,7 +50,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME | lower }}/horario:latest
+          tags: ${{ secrets.DOCKER_USERNAME}}/horario:latest
 #        env:
 #          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 #          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -80,4 +80,4 @@ jobs:
           ssh -o StrictHostKeyChecking=no \
             -i ${{ secrets.DEPLOY_KEY }} \
             ubuntu@35.79.131.185 \
-            'docker pull ${{ secrets.DOCKER_USERNAME | lower }}/horario:latest && docker stop horario && docker rm horario && docker run -d --name horario ${{ secrets.DOCKER_USERNAME | lower }}/horario:latest'
+            'docker pull ${{ secrets.DOCKER_USERNAME}}/horario:latest && docker stop horario && docker rm horario && docker run -d --name horario ${{ secrets.DOCKER_USERNAME}}/horario:latest'
