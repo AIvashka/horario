@@ -61,27 +61,40 @@ jobs:
 
 
   deploy:
-    name: Deploy to EC2
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get update && sudo apt-get install -y awscli
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Pull Docker image
-        run: docker pull ${{ secrets.DOCKER_USERNAME }}/horario:latest
-      - name: Start Docker container
-        run: |
-          docker run -d ${{ secrets.DOCKER_USERNAME }}/horario:latest
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ec2-3-112-113-115.ap-northeast-1.compute.amazonaws.com
+        username: ubuntu
+        key: ${{ secrets.DEPLOY_KEY }}
+        port: 22
+        script: |
+          docker pull ${{ secrets.DOCKER_USERNAME }}/horario:latest
+          docker stop horario_container || true
+          docker rm horario_container || true
+          docker run -d --name horario_container ${{ secrets.DOCKER_USERNAME }}/horario:latest
+
+#    name: Deploy to EC2
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v2
+#      - name: Install AWS CLI
+#        run: |
+#          sudo apt-get update && sudo apt-get install -y awscli
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ secrets.AWS_REGION }}
+#      - name: Login to Docker Hub
+#        uses: docker/login-action@v1
+#        with:
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
+#      - name: Pull Docker image
+#        run: docker pull ${{ secrets.DOCKER_USERNAME }}/horario:latest
+#      - name: Start Docker container
+#        run: |
+#          docker run -d ${{ secrets.DOCKER_USERNAME }}/horario:latest
