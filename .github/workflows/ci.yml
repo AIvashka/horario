@@ -84,5 +84,4 @@ jobs:
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/horario:latest
       - name: Start Docker container
         run: |
-          docker run -d -p ${{ secrets.DOCKER_USERNAME }}/horario:latest
-          sleep 5
+          docker run -d ${{ secrets.DOCKER_USERNAME }}/horario:latest
