@@ -53,7 +53,8 @@ jobs:
     name: Deploy
     needs: build-push
     runs-on: ubuntu-latest
-    if: .github.ref == 'refs/heads/deploy'
+#    if: .github.ref == 'refs/heads/deploy'
+    if: github.ref == 'refs/heads/deploy'
 
     steps:
       - name: Install AWS CLI
