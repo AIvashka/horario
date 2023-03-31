@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"horario/internal/config"
 	"horario/internal/events"
 	"horario/pkg/bot"
@@ -14,7 +13,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to load configuration: %v", err)
 	}
-	fmt.Println(cfg)
 	// Connect to the database
 	db, err := events.NewDB(cfg)
 	if err != nil {

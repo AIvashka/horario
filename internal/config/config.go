@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 	"os"
@@ -25,10 +24,6 @@ func LoadConfig() (*Config, error) {
 	if err != nil && !os.IsNotExist(err) {
 		return nil, err
 	}
-
-	v := os.Getenv("DBHOST")
-	c := os.Getenv("DBPORT")
-	fmt.Println(v, c)
 
 	// Set the config file name and path
 	viper.SetConfigName("config")

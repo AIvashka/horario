@@ -79,4 +79,4 @@ jobs:
             docker rm horario_container || true
             docker run -d -v "$(pwd)/.env:/app/.env" --name horario_container ${{ secrets.DOCKER_USERNAME }}/horario:latest
 
-            docker run -d -v "$(pwd)/.env:/app/.env" --name horario_container alexeyivashka/horario:latest
+#            docker run -d -v "$(pwd)/.env:/app/.env" --name horario_container alexeyivashka/horario:latest
