@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 	"os"
@@ -25,6 +26,10 @@ func LoadConfig() (*Config, error) {
 		return nil, err
 	}
 
+	v := os.Getenv("DBHOST")
+	c := os.Getenv("DBPORT")
+	fmt.Println(v, c)
+
 	// Set the config file name and path
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
@@ -36,29 +41,23 @@ func LoadConfig() (*Config, error) {
 			return nil, err
 		}
 	}
+	// Bind environment variables to viper
+	viper.BindEnv("DBHOST")
+	viper.BindEnv("DBPORT")
+	viper.BindEnv("DBUSER")
+	viper.BindEnv("DBPASSWORD")
+	viper.BindEnv("DBNAME")
+	viper.BindEnv("BOTTOKEN")
 
-	// Read the environment variables
-	viper.AutomaticEnv()
-
-	// Override the config values with environment variables
-	viper.SetEnvPrefix("HORARIO")
-	viper.BindEnv("DBHost")
-	viper.BindEnv("DBPort")
-	viper.BindEnv("DBUser")
-	viper.BindEnv("DBPassword")
-	viper.BindEnv("DBName")
-	viper.BindEnv("BotToken")
-
-	// Create the config struct
+	// Read the values from viper
 	cfg := &Config{
-		DBHost:     viper.GetString("DBHost"),
-		DBPort:     viper.GetString("DBPort"),
-		DBUser:     viper.GetString("DBUser"),
-		DBPassword: viper.GetString("DBPassword"),
-		DBName:     viper.GetString("DBName"),
-		BotToken:   viper.GetString("BotToken"),
+		DBHost:     viper.GetString("DBHOST"),
+		DBPort:     viper.GetString("DBPORT"),
+		DBUser:     viper.GetString("DBUSER"),
+		DBPassword: viper.GetString("DBPASSWORD"),
+		DBName:     viper.GetString("DBNAME"),
+		BotToken:   viper.GetString("BOTTOKEN"),
 	}
 
 	return cfg, nil
 }
-
